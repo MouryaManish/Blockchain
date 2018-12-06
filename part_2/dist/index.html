@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Betting</title>
+</head>
+<body>
+
+<div class="navbar-class">
+  <div class="dropdown-class">
+    <button class="dropbtn-class" id="dropbtn-id">Select User</button>
+    <div class="dropdown-content-class" id="myDropdown-id">
+		<form id="user-switch-id">
+		  <input type="radio" name="user_selection" id = "0" value="0" checked>Owner<br>
+		  <input type="radio" name="user_selection" id = "1" value="1">Account 1<br>
+		  <input type="radio" name="user_selection" id = "2" value="2">Account 2<br>
+		  <input type="radio" name="user_selection" id = "3" value="3">Account 3<br>
+		</form>
+    </div>
+  </div> 
+</div>
+
+<h1 id="selected-account-id"><b>Owner</h1>
+<div class = "deploy-class">
+	<input type="button" id="deploy-button-id" value="Deploy Contract"></input>
+	<p id="deploy-text-id"></p>
+</div><br>
+<div class = "invitation-class" >
+	<input type="button" id="invitation-button-id" value="Send Invitation"></input>
+	<p id="invitation-text-id"></p>
+</div><br>
+<div class = "startBetting-class" >
+	<input type="button" id="startBetting-button-id" value="Initialize Betting"></input>
+	<input type ="number" id="startBetting-text-id" ></input>
+	<p id="startBetting-state-id"></p>
+</div><br>
+<div class = "betting-class" >
+	<input type="button" id="betting-button-id" value="Bet"></input><br>
+	<p>Number to Bet</p>
+	<input type="number" id="betting-number-id"></input><br>
+	<p>Amount in ether</p>
+	<input type="number" id="betting-text-id"> ether</input><br><br>
+	<input type="file" id="read-file-id" accept=".txt" style="display:none"></input>
+	<p id="betting-state-id"></p>
+</div><br>
+<div class = "balance-class" >
+	<input type="button" id="balance-button-id" value="Get Balance"></input>
+	<p id="balance-text-id"></p>
+</div><br>
+<div class = "range-class" >
+	<input type="button" id="range-button-id" value="Check Betting Range"></input>
+	<p id="range-text-id"></p>
+</div><br>
+<div class = "winning-numbers-class" >
+	<input type="button" id="winning-numbers-button-id" value="Check Winning address"></input>
+	<p id="winning-text-id"></p>
+</div><br>
+<div class = "looser-numbers-class" >
+	<input type="button" id="looser-number-button-id" value="Check Lossing address"></input>
+	<p id="losser-text-id"></p>
+</div><br>
+<div class = "random-number-class" >
+	<input type="button" id="random-number-button-id" value="Winning Number"></input>
+	<p id="random-text-id"></p>
+</div><br>
+<div class = "general-message-class" >
+	<input type="button" id="general-message-button-id" value="Check General Message"></input>
+	<p id="random-text-id"></p>
+</div><br>
+<div class = "personal-message-class">
+	<input type="button" id="personal-message-button-id" value="Check Personal Message"></input>
+	<p id="personal-text-id"></p>
+</div><br>
+<div class = "result-class">
+	<input type="button" id="result-button-id" value="Declare the Results"></input>
+	<p id="result-id"></p>
+</div><br>
+<div class = "reset-class">
+	<input type="button" id="reset-button-id" value="reset"></input>
+	<p id="reset-id"></p>
+</div><br>
+<div class = "master-reset-class">
+	<input type="button" id="master-reset-id" value="Master Reset"></input>
+	<p id="master-reset-id"></p>
+</div><br>
+<div class = "address-state-class">
+	<input type="button" id="address-state-id" value="Check Your Win/Loss state"></input>
+	<p id="address-status-id"></p>
+</div><br>
+	<script src="main.js"></script>
+	<link rel="stylesheet" href="index.css">
+</body>
+</html>
