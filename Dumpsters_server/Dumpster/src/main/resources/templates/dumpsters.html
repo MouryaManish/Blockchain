@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Dumpsters</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<h2>HTML Forms</h2>
+
+<div >
+<form  >
+  clue:<br>
+  <input type="text" id="clue" value="hello">
+  <br>
+  address:<br>
+  <input type="text" id="address" value="825rrDyTT">
+  <br><br>
+  
+  Zipcode:<br>
+  <input type="number" id="pinCode" value="02125">
+  <br><br>
+
+  <input type="submit" value="Submit" id="submit1">
+  <br><br>
+</form> 
+</div>
+
+<div >
+	<form method ="POST" action="/rudramanish/imageInfo" enctype= "multipart/form-data">
+	  price:<br>
+	  <input type="number" name="price" value="10" min ="0" max="100">
+	  <br><br>
+	  
+	  categorey:<br>
+	  <input type="text" name="categorey" value="Kitchen">
+	  <br><br>
+	  
+	  description:<br>
+	  <input type="text" name="description" value=" The Product used for 35/23 and will not be refunded">
+	  <br><br>
+	  
+	  images:<br>
+	  <input type="file" name="img" multiple accept="image/jpeg">
+	  <br><br>
+	  <input type="submit" id ="submit2">
+	</form> 
+</div>
+
+
+
+<script  type="text/javascript"  src="/dump.js" ></script>
+
+</body>
+</html>

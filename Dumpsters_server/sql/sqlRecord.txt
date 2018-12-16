@@ -1,0 +1,46 @@
+create table userrecord(
+clue varchar(10),
+address varchar(50) unique not null,
+pincode INT not null,
+primary key(clue)
+);
+
+create table subCatalog(id INT AUTO_INCREMENT,subcat INT not null unique,primary key(id));
+
+
+create table category(id INT AUTO_INCREMENT,typeList varchar(10) unique not null,primary key(id));
+
+
+create table imageList(
+address varchar(50) not null,
+category varchar(30) not null,
+subcat INT not null,
+state varchar(10) not null,
+image varchar(50),
+price INT,
+description INT,
+primary key(image),
+foreign key(category) references category(typeList),
+foreign key(subcat) references subCatalog(subcat),
+foreign key(address) references userrecord(address)
+on delete cascade 
+);
+
+drop table imageList;
+drop table userrecord;
+
+=============================================================== testing query===========
+//image query for getting subsection
+select sub.subcat from subCatalog sub,imageList imgL where sub.subcat <> imgL.subcat and imgL.address =? order by sub.subcat
+
+//image query for adding images
+insert into imageList values(?,?,?,?,?)
+
+//getting single image 
+select user.address,imgL.category,imgL.subcat,imgL.price,imgL.image from userrecord user join imageList imgL on user.address = imgL.address join category cat on 
+imgL.category=cat.typeList where user.pincode = "" and cat.typeList ="" and imgL.state ="active" order by imgL.price group by user.address,imgL.category,imgL.subcat
+order by imgL.price
+
+//getting subImages
+select imgL.address,imgL.category,imgL.subcat,imgL.price,imgL.image from imageList imgL where imgL.address = ? and
+imgL.category =? and umgL.subcat =? and imgL.price=?

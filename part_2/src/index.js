@@ -219,6 +219,7 @@ var wallet;
 var privateKey;
 var money;
 var bettingRange;
+
 var provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545');
 var web3 = new Web3(provider); // connecting to ganache
 contractObject = new web3.eth.Contract(abi);
@@ -680,6 +681,7 @@ async function masterReset(){
 		alert("error from masterReset() after send");
 		console.log(err);
 	}
+	
 	
 }
 

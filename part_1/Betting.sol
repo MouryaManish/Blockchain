@@ -126,9 +126,9 @@ contract Betting{
 					
 					/*checking id f the sender has vaild money*/
 						
-		require(msg.value > 0 && msg.sender.balance >= 0,"negative transection not allowed");//====================check if money is transfered first or condition checked first
-		require((msg.sender.balance + msg.value) >= msg.value," no overflow");
-		_;
+			require(msg.value > 0 && msg.sender.balance >= 0,"negative transection not allowed");//====================check if money is transfered first or condition checked first
+			require((msg.sender.balance + msg.value) >= msg.value," no overflow");
+			_;
 	}
 	
 	function bet(uint8 number) public _bet payable {
