@@ -29,12 +29,13 @@ public class AccountRelatedDao {
 		try{
 			con= this.daoMain.getConnection();
 			stmt =  con.prepareStatement(sql);
+			System.out.println("sql injected**********\n");
 			stmt.setString(1,userRecord.getClue());
 			stmt.setString(2, userRecord.getAddress());
 			stmt.setInt(3, userRecord.getPinCode());
-			stmt.executeUpdate(sql);
-			daoMain.commitConnection(con);
-			state = "Success";
+			stmt.executeUpdate();
+			state = "success";
+			
 		}catch(SQLException e){
 			System.out.println("*******user record not updated sql error:\n"+ e);
 		}finally{
@@ -51,6 +52,7 @@ public class AccountRelatedDao {
 		ResultSet set = null;
 		Connection con = null;
 		try{
+			System.out.println("authenticate is called for database");
 			con = this.daoMain.getConnection();
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1,userRecord.getClue());

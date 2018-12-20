@@ -9,20 +9,40 @@
 
 <h2>HTML Forms</h2>
 
-<div >
-<form  >
+<p>Authenticate user form</p>
+
+<form>
   clue:<br>
-  <input type="text" id="clue" value="hello">
+  <input type="text" id="clue" value="rudra">
   <br>
   address:<br>
-  <input type="text" id="address" value="825rrDyTT">
+  <input type="text" id="address" value="5555">
   <br><br>
   
   Zipcode:<br>
   <input type="number" id="pinCode" value="02125">
   <br><br>
 
-  <input type="submit" value="Submit" id="submit1">
+  <input type="submit" id="submit1">
+  <br><br>
+</form> 
+
+<!-- 
+<p>add user form</p>
+<div >
+<form method="POST" action="/rudramanish/addUser">
+  clue:<br>
+  <input type="text" name="clue" value="">
+  <br>
+  address:<br>
+  <input type="text" name="address" value="">
+  <br><br>
+  
+  Zipcode:<br>
+  <input type="number" name="pinCode" value="">
+  <br><br>
+
+  <input type="submit" value="Submit">
   <br><br>
 </form> 
 </div>
@@ -48,7 +68,13 @@
 	</form> 
 </div>
 
-
+<p>IPFS checking</p>
+<div >
+	<form method ="GET" action="/rudramanish/ipfsUpload" >
+	  <input type="submit" id ="submit2">
+	</form> 
+</div>
+-->
 
 <script  type="text/javascript"  src="/dump.js" ></script>
 

@@ -22,12 +22,17 @@ description INT,
 primary key(image),
 foreign key(category) references category(typeList),
 foreign key(subcat) references subCatalog(subcat),
-foreign key(address) references userrecord(address)
-on delete cascade 
+foreign key(address) references userrecord(address) ON DELETE CASCADE
 );
 
 drop table imageList;
 drop table userrecord;
+
+++++++++++++++++++++++++++++++=checking querry++++++++++++++++++++++++++++++++=
+select * from userrecord;
+drop table userrecord;
+drop table imageList;
+
 
 =============================================================== testing query===========
 //image query for getting subsection
@@ -44,3 +49,8 @@ order by imgL.price
 //getting subImages
 select imgL.address,imgL.category,imgL.subcat,imgL.price,imgL.image from imageList imgL where imgL.address = ? and
 imgL.category =? and umgL.subcat =? and imgL.price=?
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++insert query+++++++++++++++++++++++
+insert into userrecord values("manish","5555",02125);
+
+

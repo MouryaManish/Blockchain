@@ -1,10 +1,10 @@
 
 document.getElementById("submit1").addEventListener("click",submit1);
-document.getElementById("submit2").addEventListener("click",submit2);
-var image = document.getElementsByName("img")[0];
+//document.getElementById("submit2").addEventListener("click",submit2);
+//var image = document.getElementsByName("img")[0];
 //image.addEventListener("change", handleFiles, false);
-var fileList = [];
-var ImageData = new FormData();
+//var fileList = [];
+//var ImageData = new FormData();
 
 
 async function submit1(){
