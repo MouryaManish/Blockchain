@@ -35,7 +35,6 @@ public class AccountRelatedDao {
 			stmt.setInt(3, userRecord.getPinCode());
 			stmt.executeUpdate();
 			state = "success";
-			
 		}catch(SQLException e){
 			System.out.println("*******user record not updated sql error:\n"+ e);
 		}finally{
@@ -46,8 +45,8 @@ public class AccountRelatedDao {
 	}
 	
 	public String authenticate(UserInfoDao userRecord){
-		String state = "failed";
-		String sql = "select count(*) from userrecord where clue=?";
+		String address = null;
+		String sql = "select * from userrecord where clue=?";
 		PreparedStatement stmt = null;
 		ResultSet set = null;
 		Connection con = null;
@@ -58,9 +57,7 @@ public class AccountRelatedDao {
 			stmt.setString(1,userRecord.getClue());
 			set = stmt.executeQuery();
 			while(set.next()){
-				if(set.getInt(1)== 1){
-					state = "success";
-				}
+				address = set.getString(2);
 			}
 		}catch(SQLException e){
 			System.out.println("*******error from authenticate:\n"+ e);
@@ -69,7 +66,7 @@ public class AccountRelatedDao {
 			this.daoMain.resultSetClose(set);
 			this.daoMain.releaseConnection(con);
 		}
-		return state;
+		return address;
 	}
 	
 	

@@ -9,11 +9,13 @@ import io.ipfs.api.NamedStreamable;
 import java.io.File;
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,20 +56,64 @@ public class MainController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/userInfo",method = RequestMethod.POST)
+	
+	
+	@RequestMapping(value = "/authenticate",method = RequestMethod.POST)
 	@ResponseBody
-	public UserInfoDao userAccess(@RequestBody UserInfoDao userInfo,BindingResult
-	result){
+	public String[] userAccess(@RequestBody UserInfoDao userInfo,
+			HttpServletResponse httpResponse){
+		String[] message = new String[3];
+		String address = null;
 		try{
-			if(result.hasErrors()){
-				System.out.println("********error from /userInfo request******");
-				throw new Exception();
-			}
+			address = accountDao.authenticate(userInfo);
+			Cookie userAddress = new Cookie("userAddress",address);
+			userAddress.setMaxAge(-1);
+			httpResponse.addCookie(userAddress);
 		}catch(Exception e){
-			System.out.println("error in ");
+			System.out.println("error in user authentication ");
 		}
-		return userInfo;
+	
+		if(address != null){
+				logger.info("sending success for authentication");
+				message[0] = "success";
+				message[1] = address;
+				message[2] = "/addImages";
+				return message;
+			}else{
+				logger.info("sending failour for authentication");
+				message[0]="failed";
+				return message;
+			}
 	}
+	
+	@RequestMapping(value = "/register",method = RequestMethod.POST)
+	@ResponseBody
+	public String[] registerUser(@RequestBody UserInfoDao userInfo,
+			HttpServletResponse httpResponse){
+		String[] message = new String[3];
+		String state = "failed";
+		try{
+			Cookie userAddress = new Cookie("userAddress",userInfo.getAddress());
+			userAddress.setMaxAge(-1);
+			httpResponse.addCookie(userAddress);
+			state = accountDao.addUser(userInfo);
+		}catch(Exception e){
+			System.out.println("error in user registeration ");
+		}
+	
+		if(state == "sucess"){
+				logger.info("sending success for registeration");
+				message[0] = state;
+				message[1] = userInfo.getAddress();
+				message[2] = "/addImages";
+				return message;
+			}else{
+				logger.info("sending failour for authentication");
+				message[0]=state;
+				return message;
+			}
+	}
+
 	
 	
 /*
@@ -95,24 +141,7 @@ public class MainController {
 	}
 	*/
 	/*
-	@RequestMapping(value = "/authenticate",method = RequestMethod.POST,produces = "application/json")
-	@ResponseBody
-	public String userAccess(@RequestBody UserInfoDao userInfo){
-		String state = null;
-		try{
-			state = accountDao.authenticate(userInfo);
-		}catch(Exception e){
-			System.out.println("error in user authentication ");
-		}
-			if(state == "success"){
-				logger.info("sending success for authentication");
-				return state;
-			}else{
-				logger.info("sending failour for authentication");
-				state = "AuthenticateFailed";
-				return state;
-			}
-	}
+
 	
 	
 	
@@ -139,10 +168,10 @@ public class MainController {
 	}
 	*/
 	
-	@RequestMapping(value="/imageInfo",method = RequestMethod.POST)
+	@RequestMapping(value="/addImages",method = RequestMethod.POST)
 	@ResponseBody                           
 	public String imageUpload(@RequestParam("price") Number price,
-			@RequestParam("categorey") String categorey,
+			@RequestParam("category") String categorey,
 			@RequestParam("description") String description,
 			@RequestParam("img") MultipartFile file){
 			if(!file.isEmpty()){
@@ -160,16 +189,16 @@ public class MainController {
 				dir.mkdirs();
 				
 				}
-			File image = new File(path+file.getOriginalFilename()+".jpeg");
+			File image = new File(path+file.getOriginalFilename());
 			file.transferTo(image);
 				
 			}catch(IOException ex){
 				logger.info("IO exception from imageUpload controller");
 			}
-			return "redirect:uploadSuccess";
+			return "uploadSuccess";
 			
 			}else{
-				return "redirect:uploadFailed";
+				return "file is empty";
 			}
 	}
 	

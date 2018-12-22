@@ -4,13 +4,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ImageInfoDao {
+	public String address;
 	public String category;
+	public Integer subSection;
 	public String img;
 	public int price;
-	public String address;
 	public int zipCode;
 	public String description;
-	public Integer subSection;
+
 	
 	public String getCategory(){
 		return this.category;

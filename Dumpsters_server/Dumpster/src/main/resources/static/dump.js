@@ -1,13 +1,89 @@
-
-document.getElementById("submit1").addEventListener("click",submit1);
-//document.getElementById("submit2").addEventListener("click",submit2);
+/*
+document.getElementById("authenticate").addEventListener("click",authenticate);
+document.getElementById("userDatabase").addEventListener("click",userDatabase);
+*/
 //var image = document.getElementsByName("img")[0];
 //image.addEventListener("change", handleFiles, false);
 //var fileList = [];
 //var ImageData = new FormData();
 
+var form = document.forms.namedItem("fileUpload_id");
+form.addEventListener('submit',uploadImage);
 
-async function submit1(){
+
+
+
+async function uploadImage(){
+	try{
+		var data = new FormData(form);
+		var url="/rudramanish/addImages";
+		response = await fetch(url,{
+			method : "POST",
+	        headers: {
+	            "Accept": "text/plain",
+	        },
+			body:data,
+		});
+		
+		console.log("data response receievd");
+		rData = await response.text();
+		console.log("response data  " + rData);
+	}catch(err){
+		console.log("err form uploadImage");
+		console.log(err);
+	}
+}
+
+
+
+/*
+ * authenticate the user. if the authentication fails then show some indication.
+ * else redirect to new url: addImages. 
+ * */
+async function authenticate(){
+	try{
+	var clue = document.getElementById("clue");
+//	var address = document.getElementById("address");
+	var pinCode = document.getElementById("pinCode");
+	var obj= new Object();
+	obj.clue = clue.value;
+	obj.address = null;
+	obj.pinCode = pinCode.value;
+	var data = JSON.stringify(obj);
+	var url ="/rudramanish/authenticate";
+	// setting request object along with it.
+	data = await fetch(url,{
+		        method: "POST", 
+		        mode: "same-origin", 
+		        cache: "no-cache", 
+		        credentials: "same-origin", 
+		        headers: {
+		            "Content-Type": "application/json",
+		             //"Accept": "application/json",
+		            "Accept": "text/plain",
+		        },
+		        redirect: "follow",
+		        referrer: "no-referrer", 
+		        body: data,
+	});
+	console.log("data response receievd");
+	data = await data.text();
+	console.log("response data  " + data);
+	if(data == "failed"){
+		
+	}
+	else{
+		window.location.assign("http://localhost:8086/rudramanish/"+data);
+	}
+}
+	catch(err){
+		console.log("******err from send transection*******");
+		console.log(err);
+	}
+}
+
+
+async function userDatabase(){
 	try{
 	var clue = document.getElementById("clue");
 	var address = document.getElementById("address");
@@ -17,29 +93,39 @@ async function submit1(){
 	obj.address = address.value;
 	obj.pinCode = pinCode.value;
 	var data = JSON.stringify(obj);
-	var url ="/rudramanish/userInfo";
+	var url ="/rudramanish/register";
 	// setting request object along with it.
 	data = await fetch(url,{
 		        method: "POST", 
-		        mode: "cors", 
+		        mode: "same-origin", 
 		        cache: "no-cache", 
 		        credentials: "same-origin", 
 		        headers: {
 		            "Content-Type": "application/json",
+		             //"Accept": "application/json",
+		            "Accept": "text/plain",
 		        },
 		        redirect: "follow",
 		        referrer: "no-referrer", 
 		        body: data,
 	});
-	
-	data = await data.json();
-	console.log(data);
+	console.log("data response receievd");
+	data = await data.text();
+	console.log("response data  " + data);
+	if(data == "failed"){
+		
 	}
+	else{
+		window.location.assign("http://localhost:8086/rudramanish/"+data);
+	}
+}
 	catch(err){
 		console.log("******err from send transection*******");
 		console.log(err);
 	}
 }
+
+
 
 // we are using HTml to send this data.
 /* 
@@ -71,6 +157,8 @@ function submit2(){
 			alert("file not selected");
 }
 
+*/
+/*
 async function sendImage(img){
 	try{
 	console.log("****image sending iniciated****");
@@ -89,7 +177,7 @@ async function sendImage(img){
 		console.log("****err in upload");
 		console.log(err);
 	}
-}
-*/
+}*/
+
 
 
