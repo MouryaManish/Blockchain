@@ -90,9 +90,9 @@ public class MainController {
 	
 	@RequestMapping(value = "/register",method = RequestMethod.POST)
 	@ResponseBody
-	public String[] registerUser(@RequestBody UserInfoDao userInfo,
+	public ArrayList<String> registerUser(@RequestBody UserInfoDao userInfo,
 			HttpServletResponse httpResponse){
-		String[] message = new String[3];
+		ArrayList<String> message = new ArrayList<String>();
 		String state = "failed";
 		try{
 			Cookie userAddress = new Cookie("userAddress",userInfo.getAddress());
@@ -105,13 +105,13 @@ public class MainController {
 	
 		if(state == "sucess"){
 				logger.info("sending success for registeration");
-				message[0] = state;
-				message[1] = userInfo.getAddress();
-				message[2] = "/addImages";
+				message.add(state);
+				message.add(userInfo.getAddress());
+				message.add("/addImages");
 				return message;
 			}else{
 				logger.info("sending failour for authentication");
-				message[0]=state;
+				message.add(state);
 				return message;
 			}
 	}
