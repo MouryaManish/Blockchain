@@ -8,6 +8,7 @@ import io.ipfs.api.NamedStreamable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -60,9 +61,9 @@ public class MainController {
 	
 	@RequestMapping(value = "/authenticate",method = RequestMethod.POST)
 	@ResponseBody
-	public String[] userAccess(@RequestBody UserInfoDao userInfo,
+	public ArrayList<String> userAccess(@RequestBody UserInfoDao userInfo,
 			HttpServletResponse httpResponse){
-		String[] message = new String[3];
+		ArrayList<String> message = new ArrayList<String>();
 		String address = null;
 		try{
 			address = accountDao.authenticate(userInfo);
@@ -71,17 +72,18 @@ public class MainController {
 			httpResponse.addCookie(userAddress);
 		}catch(Exception e){
 			System.out.println("error in user authentication ");
+			System.out.println(e);
 		}
 	
 		if(address != null){
 				logger.info("sending success for authentication");
-				message[0] = "success";
-				message[1] = address;
-				message[2] = "/addImages";
+				message.add("success");
+				message.add(address);
+				message.add("/addImages");
 				return message;
 			}else{
 				logger.info("sending failour for authentication");
-				message[0]="failed";
+				message.add("failed");
 				return message;
 			}
 	}

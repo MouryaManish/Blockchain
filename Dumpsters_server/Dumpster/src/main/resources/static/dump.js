@@ -1,7 +1,7 @@
-/*
+
 document.getElementById("authenticate").addEventListener("click",authenticate);
 document.getElementById("userDatabase").addEventListener("click",userDatabase);
-*/
+
 //var image = document.getElementsByName("img")[0];
 //image.addEventListener("change", handleFiles, false);
 //var fileList = [];
@@ -42,6 +42,7 @@ async function uploadImage(){
  * */
 async function authenticate(){
 	try{
+	var state = null ;
 	var clue = document.getElementById("clue");
 //	var address = document.getElementById("address");
 	var pinCode = document.getElementById("pinCode");
@@ -59,21 +60,21 @@ async function authenticate(){
 		        credentials: "same-origin", 
 		        headers: {
 		            "Content-Type": "application/json",
-		             //"Accept": "application/json",
-		            "Accept": "text/plain",
+		             "Accept": "application/json",
 		        },
 		        redirect: "follow",
 		        referrer: "no-referrer", 
 		        body: data,
 	});
 	console.log("data response receievd");
-	data = await data.text();
-	console.log("response data  " + data);
-	if(data == "failed"){
-		
+	data = await data.json();
+	console.log("response data  ");
+	console.log(data);
+	if(data[0] == "failed"){
+		state = false;
 	}
 	else{
-		window.location.assign("http://localhost:8086/rudramanish/"+data);
+		window.location.assign("http://localhost:8086/rudramanish"+data[2]);
 	}
 }
 	catch(err){

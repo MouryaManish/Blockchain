@@ -56,11 +56,12 @@ public class AccountRelatedDao {
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1,userRecord.getClue());
 			set = stmt.executeQuery();
-			while(set.next()){
-				address = set.getString(2);
-			}
+				while(set.next()){
+					address = set.getString(2);
+				}
 		}catch(SQLException e){
-			System.out.println("*******error from authenticate:\n"+ e);
+			System.out.println("*******sql exception from authenticate:");
+			System.out.println(e);
 		}finally{
 			this.daoMain.stmtClose(stmt);
 			this.daoMain.resultSetClose(set);
@@ -68,8 +69,5 @@ public class AccountRelatedDao {
 		}
 		return address;
 	}
-	
-	
-	
-}
 
+}
