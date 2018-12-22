@@ -1,56 +1,310 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
 <title>Dumpsters</title>
 <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
+<body> -->
 
-<h2>HTML Forms</h2>
-
+<!--
+<h2>authenticate user</h2>
 <div >
-<form  >
+<form>
   clue:<br>
   <input type="text" id="clue" value="hello">
+
   <br>
   address:<br>
   <input type="text" id="address" value="825rrDyTT">
   <br><br>
-  
+
   Zipcode:<br>
   <input type="number" id="pinCode" value="02125">
   <br><br>
 
-  <input type="submit" value="Submit" id="submit1">
+  <input type="submit" value="submit to authenticate" id="authenticate">
+  <input type="submit" value="submit to add to database" id="userDatabase">  
   <br><br>
 </form> 
 </div>
 
-<div >
-	<form method ="POST" action="/rudramanish/imageInfo" enctype= "multipart/form-data">
-	  price:<br>
-	  <input type="number" name="price" value="10" min ="0" max="100">
-	  <br><br>
-	  
-	  categorey:<br>
-	  <input type="text" name="categorey" value="Kitchen">
+-->
+
+
+
+
+<!-- method ="POST" action="/rudramanish/addImages" enctype= "multipart/form-data" -->
+
+<!-- <div >
+	<form  enctype= "multipart/form-data" id="fileUpload_id" >	  
+	  category:<br>
+	  <input type="text" name="category"  value="">
 	  <br><br>
 	  
 	  description:<br>
-	  <input type="text" name="description" value=" The Product used for 35/23 and will not be refunded">
+	  <input type="text" name="description"  value="">
+	  <br><br>
+	  
+	  price:<br>
+	  <input type="number" name="price"  value="" min ="0" max="100">
 	  <br><br>
 	  
 	  images:<br>
-	  <input type="file" name="img" multiple accept="image/jpeg">
+	  <input type="file" name="img" accept="image/jpeg">
 	  <br><br>
-	  <input type="submit" id ="submit2">
+	  <input type="submit" name="submit" value="upload_Image">
 	</form> 
 </div>
+
 
 
 
 <script  type="text/javascript"  src="/dump.js" ></script>
 
 </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Creative</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" >
+
+    <!-- Custom fonts for this template -->
+    <link  rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="/vendor/magnific-popup/magnific-popup.css">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/css/creative.min.css" >
+
+  </head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Modern Selling - Start Selling with Blockchain</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" data-toggle="modal" data-target="#sellPopup">Sell</a>
+              
+            </li><!-- 
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#services">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="modal fade" id="sellPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Your Information!!</h5>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="control-group form-group">
+                        <div class="controls">
+                          <label>Give your own ID (length 10):</label>
+                          <input type="text" class="form-control" id="clue" maxlength="10">
+                        </div>
+                      </div>
+                      <div class="control-group form-group" id = 'bcAddr' style="display:none;">
+                        <div class="controls">
+                          <label>Blockchain Address:</label>
+                          <input type="text" class="form-control" id="address">
+                        </div>
+                      </div>
+                      <div class="control-group form-group" id="zipCode" style="display:none;">
+                        <div class="controls">
+                          <label>Zipcode:</label>
+                          <input type="number" pattern="[0-9]{5}" max="100000" class="form-control" id="pinCode">
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="register()" id="auth">Register</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" onclick="authenticate()" id="auth">Login</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+    <header class="masthead text-center text-white d-flex">
+      <div class="container my-auto">
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+            <h1 class="text-uppercase">
+              <strong>We helps you sell your un-used materials</strong>
+            </h1>
+            <hr>
+          </div>
+          <div class="col-lg-8 mx-auto">
+            <p class="text-faded mb-5">Start buying and selling on Blockchain! Just select a category and go, no strings attached!</p>
+            <!-- <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">Find Out More</a> -->
+            <!-- <a class=" dropdown-toggle  btn-primary btn" id="navbarDropdownPortfolio" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Category
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
+              <a class="dropdown-item" href="#">1 Column Portfolio</a>
+              <a class="dropdown-item" href="#">2 Column Portfolio</a>
+              <a class="dropdown-item" href="#">3 Column Portfolio</a>
+              <a class="dropdown-item" href="#">4 Column Portfolio</a>
+              <a class="dropdown-item" href="#">Single Portfolio Item</a>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </header>
+  <br>
+  <div class="container">
+  <div class="row">
+    <div class="col">
+      <select class="form-control" id="category">
+          <option value="1">Furniture</option>
+          <option value="2">Electronics</option>
+          <option value="3">Kitchen</option>
+          <option value="4">Bathroom</option>
+          <option value="5">Miscellaneous</option>
+      </select>
+    </div>
+    <br>
+    <div class="col">
+          Zipcode: <input id="zip" type="number">
+          <button type="button" class="btn btn-primary" id="zipress">Search</button>   
+    </div>
+    </div>
+  </div>
+
+    <br>
+
+    <h2 class="mb-5 text-muted">BUY IT!! </h2>
+
+    <!-- <button onclick="App.genRandomNumber()" class="btn btn-primary">Generate-Random-Number</button> --> 
+    <p id="randnumber" ></p>
+    <p id="randnumber1" ></p>
+
+
+    <div class = "balance-class" >
+  <input type="button" id="balance-button-id" value="Get Balance"></input>
+  <p id="balance-text-id"></p>
+</div><br>
+
+    <!------------------------ Category Section (Cards) STARTS ------------------------>
+    <!-- <button type="button" class="btn btn-info" id="btnGen">Generate</button> -->
+    <div class="row">
+        <div class="col-lg-4 col-sm-6 portfolio-item">
+          <div class="card h-100">
+            <a><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+            <div class="card-body">
+              <h4 class="card-title">
+                <a >Item # One</a>
+              </h4>
+              <p class="card-text">Badhuj lai le bc</p>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#payPopup">Buy!!</button>
+              <a class="btn btn-primary" href="shop.html">View</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" id="contentPanel">
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="payPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Almost there!!</h5>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="message-text" class="col-form-label">Upload your privatekey in a file:</label>
+                    <input type="file" class="form-control" id="privatekeyfile">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    <!------------------------ Category Section (Cards) ENDS ------------------------>
+
+    <!-- <section id="contact">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="section-heading">Let's Get In Touch!</h2>
+            <hr class="my-4">
+            <p class="mb-5">Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 ml-auto text-center">
+            <i class="fas fa-phone fa-3x mb-3 sr-contact-1"></i>
+            <p>123-456-6789</p>
+          </div>
+          <div class="col-lg-4 mr-auto text-center">
+            <i class="fas fa-envelope fa-3x mb-3 sr-contact-2"></i>
+            <p>
+              <a href="mailto:your-email@your-domain.com">feedback@startbootstrap.com</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="/vendor/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script type="text/javascript" src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script type="text/javascript" src="/vendor/scrollreveal/scrollreveal.min.js"></script>
+    <script type="text/javascript" src="/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+
+    <!-- Custom scripts for this template --><!-- 
+    <script src="js/creative.min.js"></script> -->
+    <script type="text/javascript" src="/dump.js"></script><!-- 
+    <script src="js/creative.js"></script>
+    <script src="js/web3.min.js"></script> -->
+
+  </body>
+
 </html>
