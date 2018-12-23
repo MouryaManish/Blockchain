@@ -1,22 +1,41 @@
-
+/*
 document.getElementById("authenticate").addEventListener("click",authenticate);
 document.getElementById("userDatabase").addEventListener("click",userDatabase);
-
+*/
 //var image = document.getElementsByName("img")[0];
 //image.addEventListener("change", handleFiles, false);
 //var fileList = [];
 //var ImageData = new FormData();
 
 var form = document.forms.namedItem("fileUpload_id");
-form.addEventListener('submit',uploadImage);
+//form.addEventListener('submit',uploadImage);
 
+
+
+
+
+//document.getElementById("auth").addEventListener("submit",authenticate);
+
+
+var bcAddr = document.getElementById('bcAddr');
+var zipCode = document.getElementById('zipCode');
+var auth1 = document.getElementById('auth1');
+var auth2 = document.getElementById('auth2');
+
+
+function show(element,visibility) { 
+        element.style.display = visibility; 
+    }
 
 
 
 async function uploadImage(){
 	try{
-		var data = new FormData(form);
 		var url="/rudramanish/addImages";
+		console.log(url);
+		var data = new FormData(form);
+		console.log(url);
+		console.log(data.getAll("img"));
 		response = await fetch(url,{
 			method : "POST",
 	        headers: {
@@ -41,15 +60,23 @@ async function uploadImage(){
  * else redirect to new url: addImages. 
  * */
 async function authenticate(){
+	console.log("*************8");
 	try{
 	var state = null ;
 	var clue = document.getElementById("clue");
-//	var address = document.getElementById("address");
-	var pinCode = document.getElementById("pinCode");
 	var obj= new Object();
 	obj.clue = clue.value;
 	obj.address = null;
-	obj.pinCode = pinCode.value;
+	obj.pinCode = null;
+	if(state == false){
+		var address = document.getElementById("address");
+		var pinCode = document.getElementById("pinCode");
+		obj.address = address;
+		obj.pinCode = pinCode;
+	}
+//	var address = document.getElementById("address");
+//	var pinCode = document.getElementById("pinCode");
+	
 	var data = JSON.stringify(obj);
 	var url ="/rudramanish/authenticate";
 	// setting request object along with it.
@@ -72,9 +99,11 @@ async function authenticate(){
 	console.log(data);
 	if(data[0] == "failed"){
 		state = false;
+		show(bcAddr, 'block');
+		show(zipCode, 'block');
 	}
 	else{
-		window.location.assign("http://localhost:8086/rudramanish"+data[2]);
+		window.location.assign("http://localhost:8086/rudramanish"+data[1]);
 	}
 }
 	catch(err){
@@ -82,6 +111,54 @@ async function authenticate(){
 		console.log(err);
 	}
 }
+
+async function register(){
+	show(bcAddr, 'block');
+	show(zipCode, 'block');
+	show(auth1, 'none');
+	show(auth2, 'block');
+	//registerInternal();
+}
+
+async function registerInternal(){
+	var clue = document.getElementById("clue");
+	var address = document.getElementById("address");
+	var pinCode = document.getElementById("pinCode");
+
+	var obj= new Object();
+	obj.clue = clue.value;
+	obj.address = address.value;
+	obj.pinCode = pinCode.value
+	var data = JSON.stringify(obj);
+	var url ="/rudramanish/register";
+	// setting request object along with it.
+	data = await fetch(url,{
+		        method: "POST", 
+		        mode: "same-origin", 
+		        cache: "no-cache", 
+		        credentials: "same-origin", 
+		        headers: {
+		            "Content-Type": "application/json",
+		             "Accept": "application/json",
+		        },
+		        redirect: "follow",
+		        referrer: "no-referrer", 
+		        body: data,
+	});
+	console.log("data response receievd");
+	data = await data.json();
+	console.log("response data  ");
+	console.log(data);
+	if(data[0] == "failed"){
+		alert("Login error");
+	}
+	else{
+		window.location.assign("http://localhost:8086/rudramanish"+data[1]);
+	}
+}
+
+
+
 
 
 async function userDatabase(){
@@ -113,8 +190,7 @@ async function userDatabase(){
 	console.log("data response receievd");
 	data = await data.text();
 	console.log("response data  " + data);
-	if(data == "failed"){
-		
+	if(data == "failed"){		
 	}
 	else{
 		window.location.assign("http://localhost:8086/rudramanish/"+data);
@@ -179,6 +255,5 @@ async function sendImage(img){
 		console.log(err);
 	}
 }*/
-
 
 

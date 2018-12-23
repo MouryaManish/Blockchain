@@ -1,5 +1,7 @@
 package com.rudramanish.dumpster.dao;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -8,8 +10,9 @@ public class ImageInfoDao {
 	public String category;
 	public Integer subSection;
 	public String img;
-	public int price;
+	public BigDecimal price;
 	public int zipCode;
+	public String state;
 	public String description;
 
 	
@@ -60,36 +63,20 @@ public class ImageInfoDao {
 	public void setDescription(String description){
 		this.description = description;
 	}
-/*	
-	public String getImgB(){
-		return this.imgB;
+	
+	public String getState(){
+		return this.state;
 	}
 	
-	public void setImgB(String imgB ){
-		this.imgB = imgB;
+	public void setState(String state){
+		this.state = state;
 	}
 	
-	public String getImgC(){
-		return this.imgC;
-	}
-	
-	public void setImgC(String imgC ){
-		this.imgC = imgC;
-	}
-	
-	public String getImgD(){
-		return this.imgD;
-	}
-	
-	public void setImgD(String imgD ){
-		this.imgD = imgD;
-	}
-	*/
-	public int getPrice(){
+	public BigDecimal getPrice(){
 		return this.price;
 	}
 	
-	public void setPrice(int price ){
+	public void setPrice(BigDecimal price ){
 		this.price = price;
 	}
 	

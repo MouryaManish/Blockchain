@@ -17,21 +17,35 @@ category varchar(30) not null,
 subcat INT not null,
 state varchar(10) not null,
 image varchar(50),
-price INT,
-description INT,
 primary key(image),
 foreign key(category) references category(typeList),
 foreign key(subcat) references subCatalog(subcat),
 foreign key(address) references userrecord(address) ON DELETE CASCADE
 );
 
+create table priceList(
+address varchar(50) not null,
+category varchar(30) not null,
+subcat INT not null,
+price numeric(4,1) not null,
+description varchar(100) not null,
+foreign key(category) references imageList(category),
+foreign key(subcat) references imageList(subcat),
+foreign key(address) references imageList(address) ON DELETE CASCADE
+);
+
+
 drop table imageList;
+drop table userrecord;
+drop table priceList;
 drop table userrecord;
 
 ++++++++++++++++++++++++++++++=checking querry++++++++++++++++++++++++++++++++=
 select * from userrecord;
-drop table userrecord;
-drop table imageList;
+select * from subcatalog;
+select * from category;
+select * from imageList;
+select * from priceList;
 
 
 =============================================================== testing query===========
@@ -52,5 +66,18 @@ imgL.category =? and umgL.subcat =? and imgL.price=?
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++insert query+++++++++++++++++++++++
 insert into userrecord values("manish","5555",02125);
+-----------------------------------------------------------
+insert into category(typeList) values("furniture");
+
+insert into category(typeList) values("electronics");
+insert into category(typeList) values("kitchen");
+insert into category(typeList) values("bathroom");
+insert into category(typeList) values("misc");
+
+----------------------------------------------------------
+insert into subcatalog(subcat)values("1");
+insert into subcatalog(subcat)values("2");
+insert into subcatalog(subcat)values("3");
+insert into subcatalog(subcat)values("4");
 
 

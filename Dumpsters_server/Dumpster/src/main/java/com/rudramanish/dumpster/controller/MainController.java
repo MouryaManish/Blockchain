@@ -2,15 +2,13 @@ package com.rudramanish.dumpster.controller;
 
 
 
-import io.ipfs.api.IPFS;
-import io.ipfs.api.MerkleNode;
-import io.ipfs.api.NamedStreamable;
-
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -29,6 +27,7 @@ import com.rudramanish.dumpster.Application;
 import com.rudramanish.dumpster.dao.ImageInfoDao;
 import com.rudramanish.dumpster.dao.UserInfoDao;
 import com.rudramanish.dumpster.daoObjects.AccountRelatedDao;
+import com.rudramanish.dumpster.daoObjects.ImageDataBase;
 
 @Controller()
 @RequestMapping("/rudramanish")
@@ -45,6 +44,9 @@ public class MainController {
 	private AccountRelatedDao accountDao;
 	
 	@Autowired
+	private ImageDataBase  imageDatabase;
+	
+	@Autowired
 	public void setApplication(Application app){
 		this.app = app;
 	} 
@@ -56,7 +58,13 @@ public class MainController {
 	   // ((DatabaseDaoQuery)this.app.ctx.getBean(DatabaseDaoQuery.class)).test1();
 		return mav;
 	}
-	
+
+	@RequestMapping(value = "/seller",method = RequestMethod.GET)
+	public ModelAndView sellerRouter(){
+		ModelAndView mav = new ModelAndView("seller");
+	   // ((DatabaseDaoQuery)this.app.ctx.getBean(DatabaseDaoQuery.class)).test1();
+		return mav;
+	}
 	
 	
 	@RequestMapping(value = "/authenticate",method = RequestMethod.POST)
@@ -78,8 +86,8 @@ public class MainController {
 		if(address != null){
 				logger.info("sending success for authentication");
 				message.add("success");
-				message.add(address);
-				message.add("/addImages");
+				//message.add(address);
+				message.add("/seller");
 				return message;
 			}else{
 				logger.info("sending failour for authentication");
@@ -103,11 +111,11 @@ public class MainController {
 			System.out.println("error in user registeration ");
 		}
 	
-		if(state == "sucess"){
+		if(state == "success"){
 				logger.info("sending success for registeration");
 				message.add(state);
-				message.add(userInfo.getAddress());
-				message.add("/addImages");
+				//message.add(userInfo.getAddress());
+				message.add("/seller");
 				return message;
 			}else{
 				logger.info("sending failour for authentication");
@@ -169,63 +177,77 @@ public class MainController {
 			}
 	}
 	*/
-	
+	/*String path = "E:/CodeBase/Pro.Duc_Tran/imageFiles/"+
+	""+imageInfo.getAddress()+"/"+
+	imageInfo.getCategory()+ "/";*/
 	@RequestMapping(value="/addImages",method = RequestMethod.POST)
 	@ResponseBody                           
-	public String imageUpload(@RequestParam("price") Number price,
-			@RequestParam("category") String categorey,
+	public String imageUpload(@RequestParam("price") BigDecimal price,
+			@RequestParam("category") String category,
 			@RequestParam("description") String description,
-			@RequestParam("img") MultipartFile file){
-			if(!file.isEmpty()){
-			imageInfo.setPrice(price.intValue());
-			imageInfo.setCategory(categorey);
-			imageInfo.setDescription(description);
-			try{ 
-			/*String path = "E:/CodeBase/Pro.Duc_Tran/imageFiles/"+
-					""+imageInfo.getAddress()+"/"+
-					imageInfo.getCategory()+ "/";*/
+			@RequestParam("img") MultipartFile file,
+			HttpServletRequest request){
 			
-			String path = "E:/CodeBase/Pro.Duc_Tran/imageFiles/";
-			File dir = new File(path);
-			if(!dir.exists()){
-				dir.mkdirs();
-				
-				}
-			File image = new File(path+file.getOriginalFilename());
-			file.transferTo(image);
-				
-			}catch(IOException ex){
-				logger.info("IO exception from imageUpload controller");
-			}
-			return "uploadSuccess";
-			
+		String state = "active";
+		Integer section;
+		Integer section_count;
+		Integer count;
+		String hash = null;
+		Cookie[] c = request.getCookies();
+		System.out.println(c[0].getValue());
+		imageInfo.setAddress(c[0].getValue());
+		imageInfo.setCategory(category);
+		imageInfo.setState(state);
+		imageInfo.setDescription(description);
+		imageInfo.setPrice(price);
+		// checking for sebsection
+		section_count = imageDatabase.getSubSectionCount();
+		section = imageDatabase.getSubSection(imageInfo);
+		System.out.println("section " + section);
+		if(section == null || section < section_count){
+			if(section == null){
+				section = 1;
 			}else{
-				return "file is empty";
+				section +=1; 
 			}
+			imageInfo.setSubSection(section);
+			if(!file.isEmpty()){
+				try{ 
+				String path = "E:/CodeBase/Pro.Duc_Tran/Blockchain/imageFiles/"+imageInfo.getSubSection();
+				File dir = new File(path);
+				if(!dir.exists()){
+					dir.mkdirs();	
+					}
+				File image = new File(path+"/"+file.getOriginalFilename());
+				file.transferTo(image);
+				logger.info("Image created in the directory");
+				//*******************************************
+				hash = imageDatabase.ipfsUpload(section);
+				logger.info("ipfs image has created");
+				imageInfo.setImg(hash);
+				count = imageDatabase.imageCheck(imageInfo);
+				if(count == 0){
+					imageDatabase.addImages(imageInfo);
+				}else{
+					return "image is present";
+				}
+				count = imageDatabase.priceCheck(imageInfo);
+				if(count == 0){
+					imageDatabase.addPrice(imageInfo);
+				}
+				}catch(IOException ex){
+					logger.info("IO exception from imageUpload controller");
+				}
+				}else{
+					return "No Image uploaded";
+				}
+			
+		}else{
+			return "We allow only limit section"+section_count;
+		}
+		return "image uploaded!";
 	}
 	
-	@RequestMapping(value="/ipfsUpload",method = RequestMethod.GET)
-	public void ipfsUpload(){
-		try{
-			System.out.println("ipfs const will be called /n");
-		IPFS ipfs = new IPFS("/ip4/127.0.0.1/tcp/5001");
-				//IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
-		System.out.println("ipfs local will be called /n");
-		ipfs.refs.local();
-		String path = "E:/CodeBase/Pro.Duc_Tran/imageFiles/new.jpeg";
-		File fileRead = new File(path);
-		System.out.println(fileRead.exists());
-		System.out.println("namestream will be created /n");
-		NamedStreamable.FileWrapper file = new NamedStreamable.FileWrapper(fileRead);
-		System.out.println("markel nod will be cretaed/n");
-		MerkleNode addResult = ipfs.add(file).get(0);
-		System.out.println("jsonstring will be called /n");
-		System.out.println(addResult.toJSONString());
-		System.out.println("all cmd have worked so far/n");
-		
-		}catch(Exception ex){
-			logger.info("********error from ipfs******\n");
-			logger.info("error ",ex);
-		}
-	}
+	//@RequestMapping(value="/ipfsUpload",method = RequestMethod.GET)
+
 }
