@@ -29,6 +29,7 @@ category varchar(30) not null,
 subcat INT not null,
 price numeric(4,1) not null,
 description varchar(100) not null,
+primary key(address,category,subcat),
 foreign key(category) references imageList(category),
 foreign key(subcat) references imageList(subcat),
 foreign key(address) references imageList(address) ON DELETE CASCADE
@@ -51,18 +52,38 @@ select * from priceList;
 =============================================================== testing query===========
 //image query for getting subsection
 select sub.subcat from subCatalog sub,imageList imgL where sub.subcat <> imgL.subcat and imgL.address =? order by sub.subcat
+select imgList.subcat from imageList imgList where imgList.address= ? and imgList.category= ? order by imgList.subcat DESC limit 1;
 
 //image query for adding images
 insert into imageList values(?,?,?,?,?)
 
 //getting single image 
-select user.address,imgL.category,imgL.subcat,imgL.price,imgL.image from userrecord user join imageList imgL on user.address = imgL.address join category cat on 
-imgL.category=cat.typeList where user.pincode = "" and cat.typeList ="" and imgL.state ="active" order by imgL.price group by user.address,imgL.category,imgL.subcat
-order by imgL.price
+-----XXXXXX
+select user.address,imgL.category,imgL.subcat,imgL.price,imgL.image,plist.description from userrecord user join imageList imgL on user.address = imgL.address join priceList plist on 
+plist.address = imgL.address and plist.subcat = imgL.subcat where imgL.category = ? and imgL.state=? and user.pincode  between ? and ? order by plist.price
+-------XXXXXX
+
+select distinct user.address,imgL.category,imgL.subcat from userrecord user join imageList imgL on user.address = imgL.address where
+ imgL.category = ? and imgL.state=? and user.pincode  between ? and ?
+ 
+ select plist.address,plist.category,plist.subcat,plist.price,plist.description from (select distinct user.address,imgL.category,
+ imgL.subcat from userrecord user join imageList imgL on user.address = imgL.address where imgL.category = ? and imgL.state=? and 
+ user.pincode  between ? and ?) as list join priceList as plist order by plist.price 
+
 
 //getting subImages
 select imgL.address,imgL.category,imgL.subcat,imgL.price,imgL.image from imageList imgL where imgL.address = ? and
 imgL.category =? and umgL.subcat =? and imgL.price=?
+
+//image checking
+select * from imageList imgList where imgList.address = and imgList.category = and imgList.subcat = and imgList.image=;
+
+//price checking
+select * from priceList plist where plist.address = and plist.category = and plist.subcat = and plist.image=;
+
+
+
+
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++insert query+++++++++++++++++++++++
 insert into userrecord values("manish","5555",02125);
@@ -80,4 +101,6 @@ insert into subcatalog(subcat)values("2");
 insert into subcatalog(subcat)values("3");
 insert into subcatalog(subcat)values("4");
 
+
+select imgList.subcat from imageList imgList where imgList.address= 'rudra' and imgList.category= 'furniture' order by imgList.subcat DESC limit 1;
 

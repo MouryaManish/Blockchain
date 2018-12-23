@@ -34,19 +34,24 @@ async function uploadImage(){
 		var url="/rudramanish/addImages";
 		console.log(url);
 		var data = new FormData(form);
-		console.log(url);
-		console.log(data.getAll("img"));
 		response = await fetch(url,{
 			method : "POST",
+	        mode: "same-origin", 
+	        cache: "no-cache", 
+	        credentials: "same-origin",
 	        headers: {
-	            "Accept": "text/plain",
+	         // "Accept": "text/plain",
+	          "Accept": "application/json, text/plain ",
 	        },
+	        redirect: "follow",
+	        referrer: "no-referrer",
 			body:data,
 		});
 		
 		console.log("data response receievd");
-		rData = await response.text();
-		console.log("response data  " + rData);
+		rData = await response.json();
+		console.log("*****response data*****");
+		console.log(rData);
 	}catch(err){
 		console.log("err form uploadImage");
 		console.log(err);

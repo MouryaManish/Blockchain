@@ -125,74 +125,21 @@ public class MainController {
 	}
 
 	
-	
-/*
-	@RequestMapping(value = "/authenticate",method = RequestMethod.POST)
-	//(@RequestBody UserInfoDao userInfo,BindingResult result)
-	public String userAccess(@RequestParam("clue") String clue,
-			@RequestParam("address") String address,@RequestParam("pinCode") int zip,
-			UserInfoDao userInfo){
-		String state = null;
-		try{
-			userInfo.setAddress(address);
-			userInfo.setClue(clue);
-			userInfo.setPinCode(zip);
-			state = accountDao.authenticate(userInfo);
-		}catch(Exception e){
-			System.out.println("error in ");
-		}
-			if(state == "success"){
-				System.out.println("sending redirect");
-				return "seller";
-			}else{
-				logger.info("user not present");
-				return "AuthenticateFailed";
-			}
-	}
-	*/
-	/*
-
-	
-	
-	
-	@RequestMapping(value="/addUser",method=RequestMethod.POST)
-	public String addUser(@RequestParam("clue") String clue,
-			@RequestParam("address") String address,@RequestParam("pinCode") int zip,
-			UserInfoDao userInfo){
-		String state = null;
-		try{
-			userInfo.setAddress(address);
-			userInfo.setClue(clue);
-			userInfo.setPinCode(zip);
-			state = accountDao.addUser(userInfo);
-		}catch(Exception e){
-			System.out.println("error in ");
-		}
-			if(state == "success"){
-				System.out.println("sending redirect");
-				return "userAdded";
-			}else{
-				logger.info("user not present");
-				return "AuthenticateFailed";
-			}
-	}
-	*/
-	/*String path = "E:/CodeBase/Pro.Duc_Tran/imageFiles/"+
-	""+imageInfo.getAddress()+"/"+
-	imageInfo.getCategory()+ "/";*/
 	@RequestMapping(value="/addImages",method = RequestMethod.POST)
 	@ResponseBody                           
-	public String imageUpload(@RequestParam("price") BigDecimal price,
+	public ArrayList<String> imageUpload(@RequestParam("price") BigDecimal price,
 			@RequestParam("category") String category,
 			@RequestParam("description") String description,
+			@RequestParam("section") Integer section,
 			@RequestParam("img") MultipartFile file,
 			HttpServletRequest request){
 			
 		String state = "active";
-		Integer section;
-		Integer section_count;
+	//	Integer section;
+	//	Integer section_count;
 		Integer count;
-		String hash = null;
+		ArrayList<String>hash = null;
+		ArrayList<String>result = new ArrayList<String>();
 		Cookie[] c = request.getCookies();
 		System.out.println(c[0].getValue());
 		imageInfo.setAddress(c[0].getValue());
@@ -200,8 +147,10 @@ public class MainController {
 		imageInfo.setState(state);
 		imageInfo.setDescription(description);
 		imageInfo.setPrice(price);
+		/*
 		// checking for sebsection
-		section_count = imageDatabase.getSubSectionCount();
+		
+	section_count = imageDatabase.getSubSectionCount();
 		section = imageDatabase.getSubSection(imageInfo);
 		System.out.println("section " + section);
 		if(section == null || section < section_count){
@@ -209,11 +158,13 @@ public class MainController {
 				section = 1;
 			}else{
 				section +=1; 
-			}
+			}*/
+		
 			imageInfo.setSubSection(section);
 			if(!file.isEmpty()){
 				try{ 
-				String path = "E:/CodeBase/Pro.Duc_Tran/Blockchain/imageFiles/"+imageInfo.getSubSection();
+				String path = "E:/CodeBase/Pro.Duc_Tran/Blockchain/imageFiles/"+imageInfo.getCategory()+"/"+
+				imageInfo.getSubSection();
 				File dir = new File(path);
 				if(!dir.exists()){
 					dir.mkdirs();	
@@ -222,32 +173,41 @@ public class MainController {
 				file.transferTo(image);
 				logger.info("Image created in the directory");
 				//*******************************************
-				hash = imageDatabase.ipfsUpload(section);
+				hash = imageDatabase.ipfsUpload(imageInfo.getCategory(),section);
 				logger.info("ipfs image has created");
-				imageInfo.setImg(hash);
-				count = imageDatabase.imageCheck(imageInfo);
-				if(count == 0){
-					imageDatabase.addImages(imageInfo);
-				}else{
-					return "image is present";
-				}
-				count = imageDatabase.priceCheck(imageInfo);
-				if(count == 0){
-					imageDatabase.addPrice(imageInfo);
+				for(String img:hash){
+					imageInfo.setImg(img);
+					System.out.println("image hash check");
+					System.out.println(img);
+					count = imageDatabase.imageCheck(imageInfo);
+					System.out.println("count check for add image "+count);
+					if(count == 0){
+						System.out.println("image added");
+						System.out.println(imageDatabase.addImages(imageInfo));
+						//imageDatabase.addImages(imageInfo);
+						count = imageDatabase.priceCheck(imageInfo);
+						if(count == 0){
+							System.out.println("price added");
+							System.out.println(imageDatabase.addPrice(imageInfo));
+							
+							//imageDatabase.addPrice(imageInfo);
+						}
+					}
 				}
 				}catch(IOException ex){
 					logger.info("IO exception from imageUpload controller");
 				}
 				}else{
-					return "No Image uploaded";
+					result.add("No Image uploaded");
+					return result;
 				}
 			
-		}else{
+	/*	}else{
 			return "We allow only limit section"+section_count;
-		}
-		return "image uploaded!";
+		}*/
+			result.add("image uploaded!");
+			return result;
 	}
 	
-	//@RequestMapping(value="/ipfsUpload",method = RequestMethod.GET)
 
 }
