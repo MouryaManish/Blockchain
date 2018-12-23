@@ -214,7 +214,7 @@ public Integer getSubSectionCount(){
 	
 	
 	// getOne Image
-	public ArrayList<ImageInfoDao> getSingleImage(ImageInfoDao imageInfo){
+	public ArrayList<ImageInfoDao> getSingleImage(ImageInfoDao imageInfo,int distance){
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet set = null;
@@ -230,8 +230,9 @@ public Integer getSubSectionCount(){
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1,imageInfo.getCategory());
 			stmt.setString(2,imageInfo.getState());
-			stmt.setInt(3,1);//******************************8
-			stmt.setInt(4,2);
+
+			stmt.setInt(3,imageInfo.getZipCode() - distance);
+			stmt.setInt(4,imageInfo.getZipCode() - distance);
 			set = stmt.executeQuery();
 			while(set.next()){
 				ImageInfoDao image = new ImageInfoDao();
@@ -270,7 +271,7 @@ public Integer getSubSectionCount(){
 			stmt.setString(1,imageInfo.getAddress());
 			stmt.setString(2,imageInfo.getCategory());
 			stmt.setInt(3,imageInfo.getSubSection());
-			stmt.setBigDecimal(4,imageInfo.getPrice());
+			//stmt.setBigDecimal(4,imageInfo.getPrice());
 			set = stmt.executeQuery();
 			int count = 0;
 			while(set.next()){
@@ -325,6 +326,36 @@ public Integer getSubSectionCount(){
 			logger.info("error ",ex);
 		}
 		return hash;
+	}
+	
+	public String orderRecord(ImageInfoDao imageInfo){
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		String sql ="update imageList set state = 'sold' "+ 
+				"where address = ? category = ? subcat =?";
+		int a =0;
+	try{
+		con = this.daoMain.getConnection();
+		stmt =  con.prepareStatement(sql);
+		stmt.setString(1,imageInfo.getAddress());
+		stmt.setString(2,imageInfo.getCategory());
+		stmt.setInt(3,imageInfo.getSubSection());
+		a = stmt.executeUpdate();
+		//this.daoMain.commitConnection(con);
+	}catch(SQLException e){
+		//this.daoMain.rollbackCommit(con);
+		System.out.println("******error from ImageDatabaseDao.addImage*******");
+		System.out.println(e);
+	}finally{
+		this.daoMain.stmtClose(stmt);
+		this.daoMain.releaseConnection(con);
+	}
+	if(a >= 1)
+		return "sucess";
+	else
+		return "Failure";
+		
 	}
 	
 }

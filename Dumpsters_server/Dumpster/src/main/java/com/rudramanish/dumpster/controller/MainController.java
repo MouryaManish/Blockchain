@@ -58,7 +58,72 @@ public class MainController {
 	   // ((DatabaseDaoQuery)this.app.ctx.getBean(DatabaseDaoQuery.class)).test1();
 		return mav;
 	}
+	
+	@RequestMapping(value="/userView",method = RequestMethod.POST)
+	@ResponseBody
+	public ArrayList<ImageInfoDao> userView(@RequestParam("zipCode") int zipCode,
+			@RequestParam("category") String category,@RequestParam("pageNo") int pageNo){
+		int minPointer=0;
+		int maxPointer=0;
+		int distance=0;
+		String range = "short";
+		ArrayList<ImageInfoDao> list;
+		ArrayList<ImageInfoDao> tempList = new ArrayList<ImageInfoDao>();
+		minPointer = pageNo -1;
+		maxPointer = 3*pageNo -1;
+		imageInfo.setCategory(category);
+		imageInfo.setZipCode(zipCode);
+		imageInfo.setState("active");
+		if(range == "short"){
+			distance = 2;
+		}else if(range =="medium"){
+			distance = 5;
+		}else{
+			distance = 7;
+		}
+		list = imageDatabase.getSingleImage(imageInfo,distance);
+		if(list.size()!= 0 && maxPointer < list.size()){
+			for(int i=minPointer;i<=maxPointer;i++){
+				tempList.add(list.get(i));
+			}
+		}else if((list.size()!= 0) && (minPointer < list.size())&& (maxPointer > list.size())){
+			for(int i=minPointer;i<list.size();i++){
+				tempList.add(list.get(i));
+			}
+		}else{
+			
+		}
+		return tempList;
+	}
 
+	@RequestMapping(value="/itemDetails",method = RequestMethod.POST)
+	@ResponseBody
+	public ArrayList<ImageInfoDao> itemDetails(@RequestParam("address") String address,
+			@RequestParam("category") String category, @RequestParam("subSection")Integer subSection){
+			imageInfo.setAddress(address);
+			imageInfo.setCategory(category);
+			imageInfo.setSubSection(subSection);
+			ArrayList<ImageInfoDao> list;
+			list = imageDatabase.getSubImages(imageInfo);
+			return list;
+	} 
+	
+	@RequestMapping(value="/itemPage",method=RequestMethod.GET)
+	public ModelAndView itemPage(){
+		ModelAndView mav = new ModelAndView("");//******************
+		return mav;
+	}
+	
+	@RequestMapping(value="/order",method =RequestMethod.POST)
+	@ResponseBody
+	public ArrayList<String> order(@RequestBody ImageInfoDao imageInfo){
+		ArrayList<String> data =  new ArrayList<String>();
+		String state = imageDatabase.orderRecord(imageInfo);
+		data.add(state);
+		return data;
+	}
+	
+	
 	@RequestMapping(value = "/seller",method = RequestMethod.GET)
 	public ModelAndView sellerRouter(){
 		ModelAndView mav = new ModelAndView("seller");
