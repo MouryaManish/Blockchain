@@ -281,7 +281,7 @@ public Integer getSubSectionCount(){
 				image.setPrice(set.getBigDecimal(4));
 				image.setImg(set.getString(5));
 				image.setDescription(set.getString(6));
-				chosenImage.put(count,image);
+				chosenImage.add(image);
 			}
 						
 		}catch(SQLException e){
