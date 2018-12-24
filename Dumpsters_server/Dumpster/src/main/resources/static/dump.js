@@ -8,6 +8,7 @@ document.getElementById("userDatabase").addEventListener("click",userDatabase);
 //var ImageData = new FormData();
 
 var form = document.forms.namedItem("fileUpload_id");
+var form1 = document.forms.namedItem("itemSearch");
 //form.addEventListener('submit',uploadImage);
 
 
@@ -22,10 +23,118 @@ var zipCode = document.getElementById('zipCode');
 var auth1 = document.getElementById('auth1');
 var auth2 = document.getElementById('auth2');
 
+var pageNo = 1;
+var szipCode = document.getElementsByName('zipCode');
+var scategory = document.getElementsByName('categorey');
+
+
+
+var addCols = function (rData){
+	num = rData.length;
+	//console.log("length..." )
+    for (var i=0;i<num;i++) {
+    	var s ="http://ipfs.io/ipfs/" + rData[i].img ;
+    	//var description = rData[i].description;
+    	var price = rData[i].price;
+		var address = rData[i].address;
+		var category = rData[i].category;
+		var subSection = rData[i].subSection;
+		console.log(address+"..."+category+"..."+subSection);
+        var myCol = $('<div class="col-lg-4 col-sm-6 portfolio-item"></div>');
+        var myPanel = $('<div class="card h-100"> <a><img height="400" width="700" class="card-img-top" src="' + s + '" alt=""></a> <h4 class="card-title"> <a > $' + price + '</a> </h4> <div class="card-body" onclick="shop(this)"> <button type="button" class="btn btn-primary" data-toggle="modal">Buy!!</button><input type="text" class="selectedAddress" style="display:none;" value='+address+'><input type="text" class="selectedCategory" style="display:none;" value='+category+'><input type="text" class="selectedSubcat" style="display:none;" value='+subSection+'></div> </div>');
+        myPanel.appendTo(myCol);
+        myCol.appendTo('#contentPanel');
+    }
+    
+    
+    $('.close').on('click', function(e){
+      e.stopPropagation();  
+          var $target = $(this).parents('.col-sm-3');
+          $target.hide('slow', function(){ $target.remove(); });
+    });
+  };
+  
+  
+  async function shop(node){
+	  try{
+		  var  url ="/rudramanish/shop";
+		  console.log(url);
+		  
+			var obj= new Object();
+			obj.address = node.querySelector(".selectedAddress").value;
+			obj.category = node.querySelector(".selectedCategory").value;
+			obj.subSection = node.querySelector(".selectedSubcat").value;
+			var data = JSON.stringify(obj);
+			console.log("json string******");
+			response = await fetch(url,{
+				method : "POST",
+		        mode: "same-origin", 
+		        cache: "no-cache", 
+		        credentials: "same-origin",
+		        headers: {
+		        	"Content-Type": "application/json",
+		          "Accept": "application/json",
+		        },
+		        redirect: "follow",
+		        referrer: "no-referrer",
+				body:data,
+			});
+			//////window.location.assign("http://localhost:8086/rudramanish"+data[1]);
+			console.log("data response receieved in shop");
+			data = await response.json();
+			console.log("*****response data*****");
+			console.log(data);
+			if(data[0]== "success"){
+				window.location.assign("http://localhost:8086/rudramanish"+data[1]);
+		}
+	  }catch(err){
+		  console.log("error form shop: sending user selected choice");
+		  console.log(err);
+	  }
+  }
+  
+  
+
+
 
 function show(element,visibility) { 
         element.style.display = visibility; 
-    }
+   	}
+
+async function showItems1(){
+	pageNo++;
+	showItems();
+}
+
+async function showItems(){
+	try{
+		var url="/rudramanish/userView";
+		var data = new FormData(form1);
+		data.append('pageNo', pageNo);
+		response = await fetch(url,{
+			method : "POST",
+	        mode: "same-origin", 
+	        cache: "no-cache", 
+	        credentials: "same-origin",
+	        headers: {
+	         // "Accept": "text/plain",
+	          "Accept": "application/json",
+	        },
+	        redirect: "follow",
+	        referrer: "no-referrer",
+			body:data,
+		});
+		
+		console.log("data response receievd");
+		rData = await response.json();
+		console.log("*****response data*****");
+		console.log(rData);
+		addCols(rData);
+	}catch(err){
+		console.log("err form uploadImage");
+		console.log(err);
+	}
+}
 
 
 
@@ -260,5 +369,4 @@ async function sendImage(img){
 		console.log(err);
 	}
 }*/
-
 

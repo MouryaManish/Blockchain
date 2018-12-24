@@ -5,6 +5,7 @@ package com.rudramanish.dumpster.controller;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.CookieStore;
 import java.util.ArrayList;
 
 import javax.servlet.http.Cookie;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,17 +54,85 @@ public class MainController {
 	} 
 	
 	@RequestMapping(value = "/dumpsters",method = RequestMethod.GET)
-	public ModelAndView dumsterRouter(){
+	public ModelAndView dumsterRouter(HttpServletResponse httpResponse){
 		
 		ModelAndView mav = new ModelAndView("dumpsters");
+		
+		Cookie sAddress = new Cookie("sAddress","");
+		sAddress.setMaxAge(-1);
+		httpResponse.addCookie(sAddress);
+		
+		Cookie sCategory = new Cookie("sCategory","");
+		sCategory.setMaxAge(-1);
+		httpResponse.addCookie(sCategory);
+		
+		
+		Cookie sSubcat = new Cookie("sSubcat","");
+		sSubcat.setMaxAge(-1);
+		httpResponse.addCookie(sSubcat);
+		
+		
 	   // ((DatabaseDaoQuery)this.app.ctx.getBean(DatabaseDaoQuery.class)).test1();
 		return mav;
 	}
 	
+//	@RequestParam("category") String category,@RequestParam("address") String address,@RequestParam("subSection")Integer subSection
+	@RequestMapping(value ="/shop",method = RequestMethod.POST)
+	@ResponseBody
+	public ArrayList<String> shop(@RequestBody ImageInfoDao imageInfo,
+			HttpServletRequest httpRequest,HttpServletResponse response){
+		 String state = null;
+		 System.out.println("*************inside shop*******");
+		ArrayList<String> data = new ArrayList<String>();
+		Cookie[] cookie = httpRequest.getCookies();
+	/*	imageInfo.setAddress(address);
+		imageInfo.setCategory(category);
+		imageInfo.setSubSection(subSection);*/
+		for(Cookie item: cookie){ 
+			state = "failed";
+			if(item.getName().equals("sAddress")){
+				
+				item.setValue(imageInfo.getAddress());
+				response.addCookie(item);
+				System.out.println("inside address");
+				state="success";
+			}
+		if(item.getName().equals("sCategory")){
+			item.setValue(imageInfo.getCategory());
+			response.addCookie(item);
+			System.out.println("inside category");
+			state="success";
+		}
+		if(item.getName().equals("sSubcat")){
+			item.setValue(imageInfo.getSubSection().toString());
+			response.addCookie(item);
+			System.out.println("inside subcat");
+			state="success";
+		}
+		System.out.println(state);
+	} 
+		data.add(state);
+		data.add("/shopping");
+		
+		return data;
+		//imageDatabase.getSubImages(infoDao);
+	}
+	
+	
+	@RequestMapping(value = "/shopping",method = RequestMethod.GET)
+	public ModelAndView shoopingRouter(){
+		System.out.println("********8inside shopping********");
+		ModelAndView mav = new ModelAndView("shop");
+	   // ((DatabaseDaoQuery)this.app.ctx.getBean(DatabaseDaoQuery.class)).test1();
+		return mav;
+	}
+	
+
+	
 	@RequestMapping(value="/userView",method = RequestMethod.POST)
 	@ResponseBody
-	public ArrayList<ImageInfoDao> userView(@RequestParam("zipCode") int zipCode,
-			@RequestParam("category") String category,@RequestParam("pageNo") int pageNo){
+	public ArrayList<ImageInfoDao> userView(@RequestParam("zipCode") Integer zipCode,
+			@RequestParam("category") String category,@RequestParam("pageNo") Integer pageNo){
 		int minPointer=0;
 		int maxPointer=0;
 		int distance=0;
@@ -71,6 +141,7 @@ public class MainController {
 		ArrayList<ImageInfoDao> tempList = new ArrayList<ImageInfoDao>();
 		minPointer = pageNo -1;
 		maxPointer = 3*pageNo -1;
+		System.out.println("inside**********88");
 		imageInfo.setCategory(category);
 		imageInfo.setZipCode(zipCode);
 		imageInfo.setState("active");
@@ -81,7 +152,12 @@ public class MainController {
 		}else{
 			distance = 7;
 		}
+	
 		list = imageDatabase.getSingleImage(imageInfo,distance);
+		System.out.println("****single image list received");
+		for(ImageInfoDao imageInfo: list){
+			System.out.println(imageInfo.getImg());
+		}
 		if(list.size()!= 0 && maxPointer < list.size()){
 			for(int i=minPointer;i<=maxPointer;i++){
 				tempList.add(list.get(i));
@@ -93,28 +169,47 @@ public class MainController {
 		}else{
 			
 		}
+		System.out.println("single list sent....");
 		return tempList;
 	}
 
-	@RequestMapping(value="/itemDetails",method = RequestMethod.POST)
+	@RequestMapping(value="/selectedItems",method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<ImageInfoDao> itemDetails(@RequestParam("address") String address,
-			@RequestParam("category") String category, @RequestParam("subSection")Integer subSection){
-			imageInfo.setAddress(address);
-			imageInfo.setCategory(category);
-			imageInfo.setSubSection(subSection);
+	public ArrayList<ImageInfoDao> itemDetails(HttpServletRequest request,
+			HttpServletResponse response){
+			
 			ArrayList<ImageInfoDao> list;
-			list = imageDatabase.getSubImages(imageInfo);
-			return list;
-	} 
-	
+			Cookie[] cookies = request.getCookies();
+			for(Cookie item:cookies){
+				if(item.getName().equals("sAddress")){
+					imageInfo.setAddress(item.getValue());
+					item.setValue("");
+					response.addCookie(item);
+				}
+			if(item.getName().equals("sCategory")){
+				imageInfo.setCategory(item.getValue());
+				item.setValue("");
+				response.addCookie(item);
+			}
+			if(item.getName().equals("sSubcat")){
+				imageInfo.setSubSection(Integer.parseInt(item.getValue()));
+				item.setValue("");
+				response.addCookie(item);
+			}
+	}	
+		
+		list = imageDatabase.getSubImages(imageInfo);
+		return list;
+	}
+		
+	/*
 	@RequestMapping(value="/itemPage",method=RequestMethod.GET)
 	public ModelAndView itemPage(){
 		ModelAndView mav = new ModelAndView("");//******************
 		return mav;
-	}
+	}*/
 	
-	@RequestMapping(value="/order",method =RequestMethod.POST)
+	@RequestMapping(value="/orderConfirmation",method = RequestMethod.POST)
 	@ResponseBody
 	public ArrayList<String> order(@RequestBody ImageInfoDao imageInfo){
 		ArrayList<String> data =  new ArrayList<String>();
@@ -143,6 +238,7 @@ public class MainController {
 			Cookie userAddress = new Cookie("userAddress",address);
 			userAddress.setMaxAge(-1);
 			httpResponse.addCookie(userAddress);
+			
 		}catch(Exception e){
 			System.out.println("error in user authentication ");
 			System.out.println(e);
@@ -171,6 +267,7 @@ public class MainController {
 			Cookie userAddress = new Cookie("userAddress",userInfo.getAddress());
 			userAddress.setMaxAge(-1);
 			httpResponse.addCookie(userAddress);
+	
 			state = accountDao.addUser(userInfo);
 		}catch(Exception e){
 			System.out.println("error in user registeration ");
@@ -228,8 +325,8 @@ public class MainController {
 			imageInfo.setSubSection(section);
 			if(!file.isEmpty()){
 				try{ 
-				String path = "E:/CodeBase/Pro.Duc_Tran/Blockchain/imageFiles/"+imageInfo.getCategory()+"/"+
-				imageInfo.getSubSection();
+				String path = "E:/CodeBase/Pro.Duc_Tran/Blockchain/imageFiles/"+ 
+				imageInfo.getAddress()+"/"+imageInfo.getCategory()+"/"+ imageInfo.getSubSection();
 				File dir = new File(path);
 				if(!dir.exists()){
 					dir.mkdirs();	
@@ -238,7 +335,7 @@ public class MainController {
 				file.transferTo(image);
 				logger.info("Image created in the directory");
 				//*******************************************
-				hash = imageDatabase.ipfsUpload(imageInfo.getCategory(),section);
+				hash = imageDatabase.ipfsUpload(imageInfo.getCategory(),section,imageInfo.getAddress());
 				logger.info("ipfs image has created");
 				for(String img:hash){
 					imageInfo.setImg(img);

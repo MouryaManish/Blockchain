@@ -228,11 +228,14 @@ public Integer getSubSectionCount(){
 		try{
 			con = this.daoMain.getConnection();
 			stmt = con.prepareStatement(sql);
+			System.out.println("  "+
+			imageInfo.getCategory()+"  " + imageInfo.getState() +"  "+(imageInfo.getZipCode() - distance)+
+			"  "+(imageInfo.getZipCode() - distance) );
 			stmt.setString(1,imageInfo.getCategory());
 			stmt.setString(2,imageInfo.getState());
-
-			stmt.setInt(3,imageInfo.getZipCode() - distance);
-			stmt.setInt(4,imageInfo.getZipCode() - distance);
+			stmt.setInt(3,(imageInfo.getZipCode() - distance));
+			stmt.setInt(4,(imageInfo.getZipCode() + distance));
+			System.out.println("sql executing for single image");
 			set = stmt.executeQuery();
 			while(set.next()){
 				ImageInfoDao image = new ImageInfoDao();
@@ -240,8 +243,8 @@ public Integer getSubSectionCount(){
 				image.setCategory(set.getString(2));
 				image.setPrice(set.getBigDecimal(4));
 				image.setSubSection(set.getInt(3));
-				image.setDescription(set.getString(6));
-				image.setImg(set.getString(5));
+				image.setDescription(set.getString(5));
+				image.setImg(set.getString(6));
 				regionalData.add(image);
 			}
 						
@@ -273,15 +276,14 @@ public Integer getSubSectionCount(){
 			stmt.setInt(3,imageInfo.getSubSection());
 			//stmt.setBigDecimal(4,imageInfo.getPrice());
 			set = stmt.executeQuery();
-			int count = 0;
 			while(set.next()){
-				count++;
 				ImageInfoDao image = new ImageInfoDao();
 				image.setAddress(set.getString(1));
 				image.setCategory(set.getString(2));
+				image.setSubSection(set.getInt(3));
 				image.setPrice(set.getBigDecimal(4));
-				image.setImg(set.getString(5));
-				image.setDescription(set.getString(6));
+				image.setDescription(set.getString(5));
+				image.setImg(set.getString(6));
 				chosenImage.add(image);
 			}
 						
@@ -296,7 +298,7 @@ public Integer getSubSectionCount(){
 		return chosenImage;
 	}
 	
-	public ArrayList<String> ipfsUpload(String category,Integer section){
+	public ArrayList<String> ipfsUpload(String category,Integer section,String address){
 		ArrayList<String> hash = new ArrayList<String>();
 		try{
 			System.out.println("ipfs const will be called /n");
@@ -304,7 +306,8 @@ public Integer getSubSectionCount(){
 				//IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
 		System.out.println("ipfs local will be called /n");
 		ipfs.refs.local();
-		String path = "E:/CodeBase/Pro.Duc_Tran/Blockchain/imageFiles/"+category+"/"+section;
+		String path = "E:/CodeBase/Pro.Duc_Tran/Blockchain/imageFiles/"+address+"/"+
+		category+"/"+section;
 		File fileRead = new File(path);
 		System.out.println(fileRead.exists());
 		System.out.println("namestream will be created /n");
@@ -352,9 +355,9 @@ public Integer getSubSectionCount(){
 		this.daoMain.releaseConnection(con);
 	}
 	if(a >= 1)
-		return "sucess";
+		return "success";
 	else
-		return "Failure";
+		return "failed";
 		
 	}
 	

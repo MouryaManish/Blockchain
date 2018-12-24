@@ -170,20 +170,22 @@
   <br>
   <div class="container">
   <div class="row">
+    <form id="itemSearch">
     <div class="col">
-      <select class="form-control" id="category">
-          <option value="1">Furniture</option>
-          <option value="2">Electronics</option>
-          <option value="3">Kitchen</option>
-          <option value="4">Bathroom</option>
-          <option value="5">Miscellaneous</option>
+      <select class="form-control" name="category">
+          <option value="furniture">Furniture</option>
+          <option value="electronics">Electronics</option>
+          <option value="kitchen">Kitchen</option>
+          <option value="bathroom">Bathroom</option>
+          <option value="misc">Miscellaneous</option>
       </select>
     </div>
     <br>
     <div class="col">
-          Zipcode: <input id="zip" type="number">
-          <button type="button" class="btn btn-primary" id="zipress">Search</button>   
+          Zipcode: <input name="zipCode" type="number">
+          <button type="button" class="btn btn-primary" onClick = "showItems()" id="zipress">Search</button>   
     </div>
+  </form>
     </div>
   </div>
 
@@ -191,6 +193,7 @@
 
     <!------------------------ Category Section (Cards) STARTS ------------------------>
     <!-- <button type="button" class="btn btn-info" id="btnGen">Generate</button> -->
+   <!-- 
     <div class="col">
       <h2 class="mb-5 text-muted">BUY IT!! </h2>
         <div class="col-lg-4 col-sm-6 portfolio-item">
@@ -206,9 +209,12 @@
             </div>
           </div>
         </div>
+        -->
 
         <div class="row" id="contentPanel">
         </div>
+        <br>
+      <button type="button" onclick="showItems1()" class="btn btn-primary">Next Page</button>
     </div>
 
     <div class="modal fade" id="payPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

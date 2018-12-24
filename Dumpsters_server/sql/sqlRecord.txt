@@ -8,7 +8,7 @@ primary key(clue)
 create table subCatalog(id INT AUTO_INCREMENT,subcat INT not null unique,primary key(id));
 
 
-create table category(id INT AUTO_INCREMENT,typeList varchar(10) unique not null,primary key(id));
+create table category(id INT AUTO_INCREMENT,typeList varchar(30) unique not null,primary key(id));
 
 
 create table imageList(
