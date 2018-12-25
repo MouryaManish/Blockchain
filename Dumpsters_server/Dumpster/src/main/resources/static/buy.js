@@ -2,6 +2,7 @@ var price;
 var address; 
 var category; 
 var subSection; 
+var flag = document.querySelector(".flag");
 
 
 
@@ -26,7 +27,6 @@ async function getSelectedImages(){
 		var data = await response.json();
 		console.log(data);
 		console.log("tiles function called");
-		//createTiles(data);
 		
 		createTiles(data);
 	}catch(err){
@@ -48,7 +48,7 @@ var createTiles = function (data){
         myPanel.appendTo(myCol);
         myCol.appendTo('#contentPanel');
     }
-    
+    																																				
    var details=$('<div><br><br><p>Description</p><p>'+ data[0].description +'</p><p>price</p><p>'+ data[0].price +' ether</p><a style="color:green;font-weight:bold;" onclick="order(this)" > Buy </a><input type=text class="address" style="display:none;" value = '+data[0].address+'><br><input type="text" class="category" style="display:none;" value='+ data[0].category +'><br><input type="text" class = "subcat" style="display:none;" value='+ data[0].subSection +'></div>');
    details.appendTo('#container');
    
@@ -57,6 +57,14 @@ var createTiles = function (data){
 
 
 async function order(element){
+/*
+	console.log("inside order function of buy.js");
+	var transactForm = document.querySelector(".transact_div"); //document.forms.namedItem("fileUpload_id");
+	transactForm.style.display = "block";
+	console.log("form enabled");
+
+	*/
+
 	console.log("**************order is called********8");
 	 var address = document.querySelector(".address").value;
 	 var category = document.querySelector(".category").value;
@@ -91,4 +99,7 @@ async function order(element){
 		}
 	 
 }
+
+
+
 

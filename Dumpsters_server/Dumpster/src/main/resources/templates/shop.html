@@ -90,6 +90,17 @@
     
 
       </div>
+      <div class="transact_div" style="display:none;">
+      	<form id="transact_id">
+      		Address:<br>
+      		<input type=text name="ropstenAddressName"  class="ropstenAddress"><br><br>
+      		Your Key:<br>
+      		<input type=text name="ropstenKeyName" class="ropstenKey" ><br><br>
+      		<input type=submit id="transact_submit_id" value="Sign Transaction" class="transact_submit_class"> 
+      	</form>
+      	<input type=text value="no" class="flag" style="display:none;" onChange="test()">
+      </div>
+      <br><br>
 
     <!-- /.container -->
 
@@ -104,9 +115,10 @@
 
     <!-- Custom scripts for this template --><!-- 
     <script src="js/creative.min.js"></script> -->
+    
     <script type="text/javascript" src="/buy.js"></script>
     <script>getSelectedImages();</script>
-
+    <script type="text/javascript" src="/main.js"></script>
   </body>
 
 </html>
