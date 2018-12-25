@@ -140,7 +140,7 @@ public class MainController {
 		ArrayList<ImageInfoDao> list;
 		ArrayList<ImageInfoDao> tempList = new ArrayList<ImageInfoDao>();
 		minPointer = pageNo -1;
-		maxPointer = 3*pageNo -1;
+		maxPointer = 6*pageNo -1;
 		System.out.println("inside**********88");
 		imageInfo.setCategory(category);
 		imageInfo.setZipCode(zipCode);
@@ -155,16 +155,20 @@ public class MainController {
 	
 		list = imageDatabase.getSingleImage(imageInfo,distance);
 		System.out.println("****single image list received");
+		System.out.println("min: " + minPointer + "max: " + maxPointer);
+		System.out.println("length of the list: " + list.size());
 		for(ImageInfoDao imageInfo: list){
 			System.out.println(imageInfo.getImg());
 		}
 		if(list.size()!= 0 && maxPointer < list.size()){
 			for(int i=minPointer;i<=maxPointer;i++){
+				System.out.println("case: list.size()!= 0 && maxPointer < list.size():  "+ i);
 				tempList.add(list.get(i));
 			}
 		}else if((list.size()!= 0) && (minPointer < list.size())&& (maxPointer > list.size())){
 			for(int i=minPointer;i<list.size();i++){
 				tempList.add(list.get(i));
+				System.out.println("case: list.size()!= 0) && (minPointer < list.size())&& (maxPointer > list.size():  "+ i);
 			}
 		}else{
 			
@@ -215,6 +219,7 @@ public class MainController {
 		ArrayList<String> data =  new ArrayList<String>();
 		String state = imageDatabase.orderRecord(imageInfo);
 		data.add(state);
+		data.add("/dumpsters");
 		return data;
 	}
 	

@@ -44,6 +44,7 @@ var addCols = function (rData){
         var myPanel = $('<div class="card h-100"> <a><img height="400" width="700" class="card-img-top" src="' + s + '" alt=""></a> <h4 class="card-title"> <a > $' + price + '</a> </h4> <div class="card-body" onclick="shop(this)"> <button type="button" class="btn btn-primary" data-toggle="modal">Buy!!</button><input type="text" class="selectedAddress" style="display:none;" value='+address+'><input type="text" class="selectedCategory" style="display:none;" value='+category+'><input type="text" class="selectedSubcat" style="display:none;" value='+subSection+'></div> </div>');
         myPanel.appendTo(myCol);
         myCol.appendTo('#contentPanel');
+  
     }
     
     

@@ -220,11 +220,11 @@ public Integer getSubSectionCount(){
 		ResultSet set = null;
 		ArrayList<ImageInfoDao> regionalData = new ArrayList<ImageInfoDao>();
 		//***** try with distinct later*****//
-		String sql = "select plist.address,plist.category,plist.subcat,plist.price,plist.description,list.image " +
-				 "from (select user.address,imgL.category, imgL.subcat,imgL.image from userrecord user join imageList imgL on "+ 
-				 "user.address = imgL.address where imgL.category = ? and imgL.state=? and "+ 
-				 "user.pincode  between ? and ? group by imgL.address,imgL.subcat) as list join priceList as plist order by plist.price"; 
-				
+		String sql = "select user.address,list.category,list.subcat,plist.price,plist.description,list.image "
+				+ "from userrecord as user join imageList as list on user.address=list.address join pricelist as plist"
+				+ " on list.address = plist.address and list.category = plist.category and list.subcat=plist.subcat "
+				+"where list.category=? and list.state=? and user.pincode between ? and ? "
+				+ "group by list.address,list.category,list.subcat order by plist.price";
 		try{
 			con = this.daoMain.getConnection();
 			stmt = con.prepareStatement(sql);
@@ -267,7 +267,8 @@ public Integer getSubSectionCount(){
 		ArrayList<ImageInfoDao> chosenImage = new ArrayList<ImageInfoDao>();
 		//***** try with distinct later*****//
 		String sql ="select plist.address,plist.category,plist.subcat,plist.price,plist.description,imgL.image from "+
-				"imageList as imgL join priceList as plist where plist.address = ? and plist.category =? and plist.subcat = ?";
+				"imageList as imgL join priceList as plist on imgL.address=plist.address and imgL.category = plist.category "
+				+" and imgL.subcat = plist.subcat where plist.address = ? and plist.category =? and plist.subcat = ?";
 		try{
 			con = this.daoMain.getConnection();
 			stmt = con.prepareStatement(sql);
@@ -336,7 +337,7 @@ public Integer getSubSectionCount(){
 		Connection con = null;
 		PreparedStatement stmt = null;
 		String sql ="update imageList set state = 'sold' "+ 
-				"where address = ? category = ? subcat =?";
+				"where address = ? and category = ? and subcat =?";
 		int a =0;
 	try{
 		con = this.daoMain.getConnection();

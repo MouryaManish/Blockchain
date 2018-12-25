@@ -5,6 +5,8 @@ var subSection;
 
 
 
+
+
 async function getSelectedImages(){
 	try{
 		console.log("inside getSelectedImages function from buy.js");
@@ -23,6 +25,9 @@ async function getSelectedImages(){
 		console.log("data received for selected items");
 		var data = await response.json();
 		console.log(data);
+		console.log("tiles function called");
+		//createTiles(data);
+		
 		createTiles(data);
 	}catch(err){
 		console.log("error from getSelectedImages");
@@ -30,47 +35,60 @@ async function getSelectedImages(){
 	}
 }
 
-function createTiles(data){
-	console.log("creating tiles in the container");
-	num = data.lenght;
-	for(var i = 0;i< num;i++){
-		var s ="http://ipfs.io/ipfs/" + data[i].img ;
-		console.log(address+"..."+category+"..."+subSection);
+
+var createTiles = function (data){
+	num= data.length;
+	console.log("lenght==== " +num);
+    for (var i=0;i<num;i++) {
+    	console.log(data[i]['img']);
+    	var s = "http://ipfs.io/ipfs/" + data[i]['img'] ;
+    	console.log("*******jquery called for tiles******");
         var myCol = $('<div class="col-lg-4 col-sm-6 portfolio-item"></div>');
         var myPanel = $('<div class="card h-100"> <a><img height="400" width="700" class="card-img-top" src="' + s + '" alt=""></a></div>');
         myPanel.appendTo(myCol);
         myCol.appendTo('#contentPanel');
-	}
-	price = data[0].price;
-	address = data[0].address;
-	category = data[0].category;
-	subSection = data[0].subSection;
-	Console.log("form create tiles");
-	Console.log("price: " +price + "  category: " +category+"  subcat:" + subSection);
-}
+    }
+    
+   var details=$('<div><br><br><p>Description</p><p>'+ data[0].description +'</p><p>price</p><p>'+ data[0].price +' ether</p><a style="color:green;font-weight:bold;" onclick="order(this)" > Buy </a><input type=text class="address" style="display:none;" value = '+data[0].address+'><br><input type="text" class="category" style="display:none;" value='+ data[0].category +'><br><input type="text" class = "subcat" style="display:none;" value='+ data[0].subSection +'></div>');
+   details.appendTo('#container');
+   
+};
 
-async function orderItem(){
-	var url="/rudramanish/orderConfirmation";
-	console.log("inside orderItem");
-	 var buyData = new FormData();
-	 buyData.append("address",address);
-	 buyData.append("price",price);
-	 buyData.append("category",category);
-	 buyData.append("subSection",subSection);
+
+
+async function order(element){
+	console.log("**************order is called********8");
+	 var address = document.querySelector(".address").value;
+	 var category = document.querySelector(".category").value;
+	 var subcat = document.querySelector(".subcat").value;
+	 console.log(address + "...." +category+ "......"+ subcat);
+	 var obj= new Object();
+	 obj.address = address;
+	 obj.subSection = subcat;
+	 obj.category = category;
+	 
+	 var data = JSON.stringify(obj);
+	 url="/rudramanish/orderConfirmation"
 	 response = await fetch(url,{
 			method : "POST",
 	        mode: "same-origin", 
 	        cache: "no-cache", 
 	        credentials: "same-origin",
 	        headers: {
+	        	"Content-Type": "application/json",
 	          "Accept": "application/json",
 	        },
 	        redirect: "follow",
 	        referrer: "no-referrer",
-			body:buyData,
-		});
-		//////window.location.assign("http://localhost:8086/rudramanish"+data[1]);
-		console.log("data response receieved in orderItem");
+			body:data,
+			});
+		console.log("data response receieved in order");
 		data = await response.json();
 		console.log(data);
+		if(data[0]=="success"){
+			alert("order placed");
+			window.location.assign("http://localhost:8086/rudramanish"+data[1]);
+		}
+	 
 }
+

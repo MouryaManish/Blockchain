@@ -58,18 +58,13 @@ select imgList.subcat from imageList imgList where imgList.address= ? and imgLis
 insert into imageList values(?,?,?,?,?)
 
 //getting single image 
------XXXXXX
-select user.address,imgL.category,imgL.subcat,imgL.price,imgL.image,plist.description from userrecord user join imageList imgL on user.address = imgL.address join priceList plist on 
-plist.address = imgL.address and plist.subcat = imgL.subcat where imgL.category = ? and imgL.state=? and user.pincode  between ? and ? order by plist.price
--------XXXXXX
 
-select distinct user.address,imgL.category,imgL.subcat from userrecord user join imageList imgL on user.address = imgL.address where
- imgL.category = ? and imgL.state=? and user.pincode  between ? and ?
- 
- select plist.address,plist.category,plist.subcat,plist.price,plist.description from (select distinct user.address,imgL.category,
- imgL.subcat from userrecord user join imageList imgL on user.address = imgL.address where imgL.category = ? and imgL.state=? and 
- user.pincode  between ? and ?) as list join priceList as plist order by plist.price 
 
+
+select user.address,list.category,list.subcat,plist.price,plist.description,list.image
+ from userrecord as user join imageList as list on user.address=list.address join pricelist as plist 
+ on list.address = plist.address and list.category = plist.category and list.subcat=plist.subcat 
+ where list.category=? and list.state=? and user.pincode between ? and ? group by list.address,list.category,list.subcat order by plist.price
 
 //getting subImages
 select imgL.address,imgL.category,imgL.subcat,imgL.price,imgL.image from imageList imgL where imgL.address = ? and
@@ -81,6 +76,12 @@ select * from imageList imgList where imgList.address = and imgList.category = a
 //price checking
 select * from priceList plist where plist.address = and plist.category = and plist.subcat = and plist.image=;
 
+
+// order update
+
+update imageList set state = 'sold' where address = ? and category = ? and subcat =?
+
+update imageList set state = 'active' where state='sold';
 
 
 
