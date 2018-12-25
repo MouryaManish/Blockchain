@@ -41,7 +41,8 @@ var createTiles = function (data){
 	console.log("lenght==== " +num);
     for (var i=0;i<num;i++) {
     	console.log(data[i]['img']);
-    	var s = "http://ipfs.io/ipfs/" + data[i]['img'] ;
+    	//"http://ipfs.io/ipfs/"----------this link is down. so we will use our localhost over ipfs
+    	var s = "http://127.0.0.1:8080/ipfs/" + data[i]['img'] ;
     	console.log("*******jquery called for tiles******");
         var myCol = $('<div class="col-lg-4 col-sm-6 portfolio-item"></div>');
         var myPanel = $('<div class="card h-100"> <a><img height="400" width="700" class="card-img-top" src="' + s + '" alt=""></a></div>');

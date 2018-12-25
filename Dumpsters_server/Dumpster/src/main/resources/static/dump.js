@@ -33,7 +33,7 @@ var addCols = function (rData){
 	num = rData.length;
 	//console.log("length..." )
     for (var i=0;i<num;i++) {
-    	var s ="http://ipfs.io/ipfs/" + rData[i].img ;
+    	var s ="http://127.0.0.1:8080/ipfs/" + rData[i].img ;
     	//var description = rData[i].description;
     	var price = rData[i].price;
 		var address = rData[i].address;

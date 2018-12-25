@@ -43,6 +43,11 @@
       <artifactId>java-ipfs-http-client</artifactId>
       <version>v1.2.2</version>
     </dependency>
+	<dependency>
+	  <groupId>org.web3j</groupId>
+	  <artifactId>core</artifactId>
+	  <version>3.4.0</version>
+	</dependency>
 	<!--
   	<dependency>
 	  <groupId>org.thymeleaf</groupId>

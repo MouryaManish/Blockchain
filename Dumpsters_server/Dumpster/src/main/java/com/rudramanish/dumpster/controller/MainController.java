@@ -240,7 +240,9 @@ public class MainController {
 		String address = null;
 		try{
 			address = accountDao.authenticate(userInfo);
+			System.out.println("*************8form authenticate " +address);
 			Cookie userAddress = new Cookie("userAddress",address);
+			System.out.println("*************8form authenticate cookie " + userAddress.getValue());
 			userAddress.setMaxAge(-1);
 			httpResponse.addCookie(userAddress);
 			
@@ -310,6 +312,7 @@ public class MainController {
 		Cookie[] c = request.getCookies();
 		System.out.println(c[0].getValue());
 		imageInfo.setAddress(c[0].getValue());
+		System.out.println("*********************image storage" + imageInfo.getAddress());
 		imageInfo.setCategory(category);
 		imageInfo.setState(state);
 		imageInfo.setDescription(description);
